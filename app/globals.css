@@ -1,0 +1,321 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap');
+
+:root {
+  --foreground-rgb: 15, 15, 15;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 6%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 6%;
+    --primary: 0 80% 43%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 6%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 80% 43%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 80% 43%;
+    --radius: 0.25rem;
+
+    /* Brand palette from logo */
+    --cosmic-red: #D61C1C;
+    --cosmic-red-dark: #B01515;
+    --cosmic-red-light: #E83333;
+    --cosmic-grey: #8A8A8A;
+    --cosmic-charcoal: #1A1A1A;
+    --cosmic-dark: #0F0F0F;
+    --cosmic-mid: #2A2A2A;
+    --cosmic-light: 0 0% 97%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .cosmic-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 text-white text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 active:scale-[0.97] focus-visible:outline-none;
+    background-color: var(--cosmic-red);
+  }
+  .cosmic-btn-primary:hover {
+    background-color: var(--cosmic-red-dark);
+  }
+
+  .cosmic-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 border border-white text-white text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 hover:bg-white hover:text-zinc-900 active:scale-[0.97];
+  }
+
+  .cosmic-btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 border text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 active:scale-[0.97];
+    border-color: var(--cosmic-red);
+    color: var(--cosmic-red);
+  }
+  .cosmic-btn-outline-dark:hover {
+    background-color: var(--cosmic-red);
+    color: white;
+  }
+
+  .cosmic-btn-dark {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-zinc-900 text-white text-xs font-semibold tracking-[0.18em] uppercase transition-all duration-300 hover:bg-zinc-800 active:scale-[0.97];
+  }
+
+  .section-label {
+    @apply text-[10px] font-semibold tracking-[0.3em] uppercase text-zinc-400;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-zinc-900 leading-[1.1];
+  }
+
+  .product-card-hover {
+    @apply transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl;
+  }
+
+  .img-cover {
+    @apply w-full h-full object-cover;
+  }
+
+  .nav-link {
+    @apply text-sm font-medium tracking-wide text-zinc-700 hover:text-zinc-900 transition-colors duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3.5 border border-zinc-200 bg-white text-sm text-zinc-900 placeholder-zinc-400 outline-none transition-all duration-200 focus:border-zinc-800 focus:ring-1 focus:ring-zinc-800;
+  }
+
+  .input-field-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-400;
+  }
+
+  .label-field {
+    @apply block text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-2;
+  }
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Thin scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+@keyframes line-grow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes counter-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up   { animation: fadeInUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in-down { animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in      { animation: fadeIn 0.5s ease-out forwards; }
+.animate-scale-in     { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-left   { animation: slideInLeft 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-right  { animation: slideInRight 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.delay-75  { animation-delay: 0.075s; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-150 { animation-delay: 0.15s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+
+/* Start hidden for staggered reveals */
+.reveal-hidden { opacity: 0; }
+
+/* ============================================================
+   HERO OVERLAYS
+   ============================================================ */
+
+.hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.05) 40%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.hero-overlay-left {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.35) 50%,
+    transparent 100%
+  );
+}
+
+/* ============================================================
+   SHIMMER SKELETON
+   ============================================================ */
+
+.skeleton {
+  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============================================================
+   MARQUEE / TICKER
+   ============================================================ */
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+/* ============================================================
+   TYPOGRAPHY REFINEMENTS
+   ============================================================ */
+
+h1, h2, h3, h4 {
+  text-rendering: optimizeLegibility;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ============================================================
+   FOCUS STYLES
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--cosmic-red);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+
+::selection {
+  background-color: var(--cosmic-red);
+  color: #fafafa;
+}
+
+/* ============================================================
+   SMOOTH IMAGE LOAD
+   ============================================================ */
+
+img {
+  transition: opacity 0.4s ease;
+}
+
+/* ============================================================
+   DETAILS/SUMMARY ACCORDION
+   ============================================================ */
+
+details summary::-webkit-details-marker { display: none; }
+details[open] summary .chevron { transform: rotate(180deg); }
+
+/* ============================================================
+   ADMIN UI HELPERS
+   ============================================================ */
+
+.admin-input {
+  @apply w-full px-3 py-2.5 border border-zinc-200 bg-white text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-500 transition-colors;
+}
+
+.admin-label {
+  @apply block text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-1.5;
+}
+
+/* animate-in helper for toasts */
+@keyframes slideInFromBottom {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation-fill-mode: both; }
+.slide-in-from-bottom-2 { animation: slideInFromBottom 0.2s ease-out; }
