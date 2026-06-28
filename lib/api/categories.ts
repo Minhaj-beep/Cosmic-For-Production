@@ -63,3 +63,33 @@ export async function syncCategoryProducts(categoryId: string, productIds: strin
   );
   return { error };
 }
+
+// ── Public-facing queries ──────────────────────────────────────────────────
+
+export async function getPublicCategories() {
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('status', 'active')
+    .order('name', { ascending: true });
+  return { data: (data ?? []) as Category[], error };
+}
+
+export async function getPublicCategoryBySlug(slug: string) {
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('status', 'active')
+    .eq('slug', slug)
+    .maybeSingle();
+  return { data: data as Category | null, error };
+}
+
+export async function getSeoByRoute(route: string) {
+  const { data, error } = await supabase
+    .from('seo_metadata')
+    .select('*')
+    .eq('route', route)
+    .maybeSingle();
+  return { data, error };
+}

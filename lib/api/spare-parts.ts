@@ -39,3 +39,49 @@ export async function uploadSparePartImage(file: File): Promise<{ url: string | 
   const { data } = supabase.storage.from('media').getPublicUrl(path);
   return { url: data.publicUrl, error: null };
 }
+
+// ── Public-facing queries ──────────────────────────────────────────────────
+
+export async function getPublicSpareParts(opts: { search?: string; category?: string } = {}) {
+  const { data, error } = await supabase
+    .from('spare_parts')
+    .select('*')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false });
+  if (error) return { data: [], error };
+
+  let result = (data ?? []) as SparePart[];
+  if (opts.category && opts.category !== 'All') {
+    result = result.filter((p) => p.category === opts.category);
+  }
+  if (opts.search?.trim()) {
+    const q = opts.search.toLowerCase();
+    result = result.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.sku.toLowerCase().includes(q) ||
+        p.compatibility.toLowerCase().includes(q)
+    );
+  }
+  return { data: result, error: null };
+}
+
+export async function getPublicSparePartBySku(sku: string) {
+  const { data, error } = await supabase
+    .from('spare_parts')
+    .select('*')
+    .eq('status', 'published')
+    .ilike('sku', sku)
+    .maybeSingle();
+  return { data: data as SparePart | null, error };
+}
+
+export async function getSparePartCategories() {
+  const { data } = await supabase
+    .from('spare_parts')
+    .select('category')
+    .eq('status', 'published');
+  const cats = Array.from(new Set((data ?? []).map((p: { category: string }) => p.category))).filter(Boolean);
+  return ['All', ...cats] as string[];
+}

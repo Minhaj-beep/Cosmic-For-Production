@@ -43,7 +43,7 @@ export default function AdminTopbar({ onMenuClick, title }: Props) {
         </Link>
 
         {/* Notifications */}
-        <div className="relative">
+        {/* <div className="relative">
           <button
             onClick={() => setShowNotifs((p) => !p)}
             className="relative w-9 h-9 flex items-center justify-center border border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:border-zinc-400 transition-colors"
@@ -75,7 +75,7 @@ export default function AdminTopbar({ onMenuClick, title }: Props) {
               </button>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* User */}
         <div className="flex items-center gap-2 pl-2 border-l border-zinc-100 ml-1">

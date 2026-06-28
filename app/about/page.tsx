@@ -1,11 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Award, Users, Globe, Wrench, ChevronRight } from 'lucide-react';
+import { getSeoByRoute } from '@/lib/api/seo';
 
-export const metadata: Metadata = {
-  title: 'About Cosmic',
-  description: 'COSMIC is a proud brand of NANDI MARKETING — over five decades of expertise in the bicycle industry, proudly designed and built in India.',
-};
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoByRoute('/about');
+  return {
+    title: seo?.title ?? 'About Cosmic | Cosmic Bikes',
+    description: seo?.description ?? 'COSMIC is a proud brand of NANDI MARKETING — over five decades of expertise in the bicycle industry, proudly designed and built in India.',
+    keywords: seo?.keywords,
+    openGraph: seo?.og_image ? { images: [seo.og_image] } : undefined,
+  };
+}
 
 const team = [
   { name: 'Arjun Sharma', role: 'Founder & CEO', image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg', bio: '16 years in cycling innovation' },

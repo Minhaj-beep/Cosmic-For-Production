@@ -12,53 +12,48 @@ interface EmailPayload {
   data: Record<string, string>;
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
-  const smtpHost = Deno.env.get("ZOHO_SMTP_HOST") || "smtp.zoho.in";
-  const smtpPort = parseInt(Deno.env.get("ZOHO_SMTP_PORT") || "587");
-  const smtpUser = Deno.env.get("ZOHO_SMTP_USER") || "";
-  const smtpPass = Deno.env.get("ZOHO_SMTP_PASS") || "";
-  const fromEmail = Deno.env.get("ZOHO_FROM_EMAIL") || smtpUser;
-  const fromName = "Cosmic Bicycles";
+async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+) {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  const from = Deno.env.get("FROM_EMAIL");
 
-  if (!smtpUser || !smtpPass) {
-    console.error("SMTP credentials not configured");
-    return { success: false, error: "SMTP not configured" };
+  if (!apiKey || !from) {
+    return {
+      success: false,
+      error: "Resend is not configured",
+    };
   }
 
-  // Use fetch to send via Zoho Mail API (REST API approach)
-  // If Zoho Mail REST API is available
-  const zohoApiKey = Deno.env.get("ZOHO_MAIL_API_TOKEN");
-  const zohoAccountId = Deno.env.get("ZOHO_ACCOUNT_ID");
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      subject,
+      html,
+    }),
+  });
 
-  if (zohoApiKey && zohoAccountId) {
-    const resp = await fetch(
-      `https://mail.zoho.in/api/accounts/${zohoAccountId}/messages`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Zoho-oauthtoken ${zohoApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fromAddress: fromEmail,
-          toAddress: to,
-          subject,
-          content: html,
-          mailFormat: "html",
-        }),
-      }
-    );
-    const result = await resp.json();
-    if (!resp.ok) {
-      return { success: false, error: JSON.stringify(result) };
-    }
-    return { success: true };
+  const result = await response.json();
+
+  if (!response.ok) {
+    return {
+      success: false,
+      error: result,
+    };
   }
 
-  // Fallback: SMTP via fetch to a relay (not available in Deno Deploy natively)
-  // Log the email for now if no API token configured
-  console.log(`[Email] To: ${to} | Subject: ${subject}`);
-  return { success: true };
+  return {
+    success: true,
+    id: result.id,
+  };
 }
 
 function dealerEnquiryHtml(data: Record<string, string>) {

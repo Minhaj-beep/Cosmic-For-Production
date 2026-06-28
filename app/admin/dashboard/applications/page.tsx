@@ -159,7 +159,11 @@ export default function ApplicationsPage() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-zinc-700">Resume / CV</p>
-                  <p className="text-xs text-zinc-400 mt-0.5 truncate">{selected.resume_url}</p>
+                  <p className="w-full text-xs text-zinc-400 mt-0.5 truncate">
+                    {selected.resume_url.length > 40
+                      ? `${selected.resume_url.slice(0, 40)}...`
+                      : selected.resume_url}
+                  </p>
                 </div>
                 <a href={selected.resume_url} target="_blank" rel="noreferrer" className="text-xs border border-zinc-200 px-3 py-1.5 text-zinc-500 hover:border-zinc-400 transition-colors">Download</a>
               </div>

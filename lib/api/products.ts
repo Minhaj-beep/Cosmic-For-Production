@@ -77,3 +77,113 @@ export async function syncProductCategories(productId: string, categoryIds: stri
   );
   return { error };
 }
+
+// ── Public-facing queries ──────────────────────────────────────────────────
+
+export type PublicProduct = Database['public']['Tables']['products']['Row'] & {
+  categories?: { name: string; slug: string } | null;
+};
+
+export async function getPublicProducts(opts: {
+  search?: string;
+  categorySlug?: string;
+  filter?: string;
+  sort?: string;
+} = {}) {
+  let query = supabase
+    .from('products')
+    .select('*, categories!products_category_id_fkey(name, slug)')
+    .eq('status', 'published');
+
+  if (opts.categorySlug) {
+    const { data: cat } = await supabase
+      .from('categories')
+      .select('id')
+      .eq('slug', opts.categorySlug)
+      .maybeSingle();
+    if (cat?.id) {
+      const { data: junctions } = await supabase
+        .from('product_categories')
+        .select('product_id')
+        .eq('category_id', cat.id);
+      const ids = (junctions ?? []).map((j: { product_id: string }) => j.product_id);
+      if (ids.length === 0) return { data: [], error: null };
+      query = query.in('id', ids);
+    }
+  }
+
+  if (opts.filter === 'new') query = query.eq('new_arrival', true);
+  else if (opts.filter === 'bestseller') query = query.eq('bestseller', true);
+  else if (opts.filter === 'sale') query = query.not('offer_price', 'is', null);
+
+  if (opts.sort === 'price_asc') query = query.order('price', { ascending: true });
+  else if (opts.sort === 'price_desc') query = query.order('price', { ascending: false });
+  else if (opts.sort === 'newest') query = query.order('created_at', { ascending: false });
+  else query = query.order('featured', { ascending: false }).order('created_at', { ascending: false });
+
+  const { data, error } = await query;
+  if (error) return { data: [], error };
+
+  let result = data as PublicProduct[];
+  if (opts.search?.trim()) {
+    const q = opts.search.toLowerCase();
+    result = result.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.sku.toLowerCase().includes(q)
+    );
+  }
+  return { data: result, error: null };
+}
+
+export async function getPublicProductBySku(sku: string) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, categories!products_category_id_fkey(name, slug), product_variants(*)')
+    .eq('status', 'published')
+    .ilike('sku', sku)
+    .maybeSingle();
+  return { data: data as (PublicProduct & { product_variants: Database['public']['Tables']['product_variants']['Row'][] }) | null, error };
+}
+
+export async function getNewArrivals(limit = 3) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, categories!products_category_id_fkey(name, slug)')
+    .eq('status', 'published')
+    .eq('new_arrival', true)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  return { data: (data ?? []) as PublicProduct[], error };
+}
+
+export async function getFeaturedProducts(limit = 4) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, categories!products_category_id_fkey(name, slug)')
+    .eq('status', 'published')
+    .eq('featured', true)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  return { data: (data ?? []) as PublicProduct[], error };
+}
+
+export async function getRelatedProducts(categoryId: string | null, excludeId: string, limit = 3) {
+  if (!categoryId) return { data: [], error: null };
+  const { data: junctions } = await supabase
+    .from('product_categories')
+    .select('product_id')
+    .eq('category_id', categoryId);
+  const ids = (junctions ?? [])
+    .map((j: { product_id: string }) => j.product_id)
+    .filter((id: string) => id !== excludeId);
+  if (ids.length === 0) return { data: [], error: null };
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, categories!products_category_id_fkey(name, slug)')
+    .eq('status', 'published')
+    .in('id', ids)
+    .limit(limit);
+  return { data: (data ?? []) as PublicProduct[], error };
+}

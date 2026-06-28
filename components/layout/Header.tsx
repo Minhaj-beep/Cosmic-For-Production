@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown, Search, ArrowRight } from 'lucide-react';
-import { categories } from '@/lib/mock-data';
+import { getPublicCategories, type Category } from '@/lib/api/categories';
 
 const navLinks = [
   { label: 'Products', href: '/collections', mega: true },
@@ -27,10 +27,15 @@ export default function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState<Category[]>([]);
   const searchRef = useRef<HTMLInputElement>(null);
   const megaTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const isHome = pathname === '/';
+
+  useEffect(() => {
+    getPublicCategories().then(({ data }) => setCategories(data));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -139,16 +144,17 @@ export default function Header() {
                               className="group flex items-center gap-3 p-3 rounded hover:bg-zinc-50 transition-colors"
                             >
                               <div className="w-14 h-10 overflow-hidden rounded-sm flex-shrink-0 bg-zinc-100">
-                                <img
-                                  src={cat.image}
-                                  alt={cat.name}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                  style={{ objectPosition: 'center 30%' }}
-                                />
+                                {cat.image_url && (
+                                  <img
+                                    src={cat.image_url}
+                                    alt={cat.name}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    style={{ objectPosition: 'center 30%' }}
+                                  />
+                                )}
                               </div>
                               <div className="min-w-0">
                                 <p className="text-[13px] font-medium text-zinc-900 leading-tight">{cat.name}</p>
-                                <p className="text-[11px] text-zinc-400 mt-0.5">{cat.count} models</p>
                               </div>
                             </Link>
                           ))}
@@ -324,7 +330,7 @@ export default function Header() {
                     href={`/collections/${cat.slug}`}
                     className="group relative overflow-hidden aspect-[3/2] bg-zinc-900"
                   >
-                    <img src={cat.image} alt={cat.name} className="w-full h-full object-cover opacity-50 group-active:opacity-60 transition-opacity" style={{ objectPosition: 'center 30%' }} />
+                    {cat.image_url && <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover opacity-50 group-active:opacity-60 transition-opacity" style={{ objectPosition: 'center 30%' }} />}
                     <div className="absolute inset-0 flex items-end p-3">
                       <span className="text-xs font-semibold text-white">{cat.name}</span>
                     </div>

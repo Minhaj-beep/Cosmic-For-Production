@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { products } from '@/lib/mock-data';
-import ProductCard from '@/components/shared/ProductCard';
+import { getFeaturedProducts, type PublicProduct } from '@/lib/api/products';
 
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -18,9 +17,71 @@ function useInView(threshold = 0.1) {
   return { ref, inView };
 }
 
+function ProductCard({ product, index, inView }: { product: PublicProduct; index: number; inView: boolean }) {
+  const slug = product.sku.toLowerCase();
+  const categoryName = product.categories?.name ?? product.subcategory;
+  const price = product.offer_price ?? product.price;
+  const originalPrice = product.offer_price ? product.price : null;
+
+  return (
+    <Link
+      href={`/products/${slug}`}
+      className="group block"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      <div className="relative overflow-hidden bg-zinc-50 aspect-[4/3]">
+        {product.images?.[0] && (
+          <img
+            src={product.images[0]}
+            alt={product.name}
+            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.05]"
+            style={{ objectPosition: 'center 30%' }}
+            loading="lazy"
+          />
+        )}
+        {product.new_arrival && (
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#D61C1C] text-white text-[10px] font-semibold tracking-[0.15em] uppercase">
+            New
+          </div>
+        )}
+        {product.bestseller && !product.new_arrival && (
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-zinc-900 text-white text-[10px] font-semibold tracking-[0.15em] uppercase">
+            Best Seller
+          </div>
+        )}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-colors duration-700" />
+      </div>
+      <div className="pt-4 pb-1">
+        <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-1.5">{categoryName}</p>
+        <h3 className="font-display text-[17px] font-medium text-zinc-900 leading-tight mb-2 group-hover:text-zinc-600 transition-colors duration-300">
+          {product.name}
+        </h3>
+        <p className="text-sm text-zinc-500 mb-3 line-clamp-1 leading-relaxed">{product.description}</p>
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-semibold text-zinc-900">₹{price.toLocaleString('en-IN')}</span>
+          {originalPrice && (
+            <>
+              <span className="text-xs text-zinc-400 line-through">₹{originalPrice.toLocaleString('en-IN')}</span>
+              <span className="text-[10px] font-semibold" style={{ color: '#D61C1C' }}>
+                {Math.round((1 - price / originalPrice) * 100)}% off
+              </span>
+            </>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function FeaturedProducts() {
-  const featured = products.filter((p) => p.isFeatured).slice(0, 4);
+  const [featured, setFeatured] = useState<PublicProduct[]>([]);
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    getFeaturedProducts(4).then(({ data }) => setFeatured(data));
+  }, []);
+
+  if (featured.length === 0) return null;
 
   return (
     <section className="py-20 md:py-32 bg-zinc-50">
@@ -50,19 +111,7 @@ export default function FeaturedProducts() {
               className={`transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: inView ? `${(i + 2) * 80}ms` : '0ms' }}
             >
-              <ProductCard
-                id={product.id}
-                name={product.name}
-                slug={product.slug}
-                categoryName={product.categoryName}
-                price={product.price}
-                originalPrice={product.originalPrice}
-                image={product.images[0]}
-                shortDescription={product.shortDescription}
-                badge={product.badge}
-                isNew={product.isNew}
-                index={i}
-              />
+              <ProductCard product={product} index={i} inView={inView} />
             </div>
           ))}
         </div>

@@ -20,7 +20,7 @@ function getTitle(pathname: string): string {
     '/admin/dashboard/stores': 'Store Locator',
     '/admin/dashboard/seo': 'SEO Management',
     // '/admin/dashboard/media': 'Media Library',
-    '/admin/dashboard/settings': 'Site Settings',
+    // '/admin/dashboard/settings': 'Site Settings',
   };
   return map[pathname] ?? 'Admin';
 }

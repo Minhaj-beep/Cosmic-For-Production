@@ -1,14 +1,26 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { categories } from '@/lib/mock-data';
+import { getPublicCategories } from '@/lib/api/categories';
+import { getSeoByRoute } from '@/lib/api/seo';
 
-export const metadata: Metadata = { title: 'Collections' };
+export const revalidate = 60;
 
-export default function CollectionsPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoByRoute('/collections');
+  return {
+    title: seo?.title ?? 'Collections | Cosmic Bikes',
+    description: seo?.description ?? 'Browse all Cosmic Bikes collections — road, mountain, gravel, and more.',
+    keywords: seo?.keywords,
+    openGraph: seo?.og_image ? { images: [seo.og_image] } : undefined,
+  };
+}
+
+export default async function CollectionsPage() {
+  const { data: categories } = await getPublicCategories();
+
   return (
     <>
-      {/* Hero */}
       <section className="pt-32 pb-16 bg-zinc-900">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
           <p className="text-xs tracking-[0.3em] uppercase text-zinc-500 mb-4">Browse by Category</p>
@@ -18,28 +30,24 @@ export default function CollectionsPage() {
         </div>
       </section>
 
-      {/* Category grid */}
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/collections/${cat.slug}`}
-                className="group block"
-              >
+              <Link key={cat.id} href={`/collections/${cat.slug}`} className="group block">
                 <div className="relative overflow-hidden aspect-[3/2] bg-zinc-100">
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{ objectPosition: 'center 30%' }}
-                  />
+                  {cat.image_url && (
+                    <img
+                      src={cat.image_url}
+                      alt={cat.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ objectPosition: 'center 30%' }}
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
                   <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
                     <div>
-                      <p className="text-xs text-white/60 tracking-wider uppercase mb-1">{cat.count} Models</p>
                       <h2 className="font-display text-2xl font-semibold text-white">{cat.name}</h2>
                     </div>
                     <div className="w-9 h-9 border border-white/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
@@ -56,7 +64,6 @@ export default function CollectionsPage() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
       <section className="py-16 bg-zinc-50 text-center">
         <div className="max-w-xl mx-auto px-6">
           <h3 className="font-display text-3xl font-semibold text-zinc-900 mb-3">Not sure where to start?</h3>

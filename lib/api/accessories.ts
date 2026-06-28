@@ -39,3 +39,50 @@ export async function uploadAccessoryImage(file: File): Promise<{ url: string | 
   const { data } = supabase.storage.from('media').getPublicUrl(path);
   return { url: data.publicUrl, error: null };
 }
+
+// ── Public-facing queries ──────────────────────────────────────────────────
+
+export async function getPublicAccessories(opts: { search?: string; category?: string; sort?: string } = {}) {
+  let query = supabase
+    .from('accessories')
+    .select('*')
+    .eq('status', 'published');
+
+  if (opts.sort === 'price_asc') query = query.order('price', { ascending: true });
+  else if (opts.sort === 'price_desc') query = query.order('price', { ascending: false });
+  else query = query.order('created_at', { ascending: false });
+
+  const { data, error } = await query;
+  if (error) return { data: [], error };
+
+  let result = (data ?? []) as Accessory[];
+  if (opts.category && opts.category !== 'All') {
+    result = result.filter((a) => a.category === opts.category);
+  }
+  if (opts.search?.trim()) {
+    const q = opts.search.toLowerCase();
+    result = result.filter(
+      (a) => a.name.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)
+    );
+  }
+  return { data: result, error: null };
+}
+
+export async function getPublicAccessoryBySku(sku: string) {
+  const { data, error } = await supabase
+    .from('accessories')
+    .select('*')
+    .eq('status', 'published')
+    .ilike('sku', sku)
+    .maybeSingle();
+  return { data: data as Accessory | null, error };
+}
+
+export async function getAccessoryCategories() {
+  const { data } = await supabase
+    .from('accessories')
+    .select('category')
+    .eq('status', 'published');
+  const cats = Array.from(new Set((data ?? []).map((a: { category: string }) => a.category))).filter(Boolean);
+  return ['All', ...cats] as string[];
+}

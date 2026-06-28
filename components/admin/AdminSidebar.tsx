@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Package, Tag, Wrench, Cog, Star, Users, Briefcase,
   MapPin, Search, Image, Settings, ChevronDown, ChevronRight, LogOut, X,
-  ShoppingBag
+  ShoppingBag, Mail
 } from 'lucide-react';
 import { useAdminAuth } from '@/lib/admin-auth-context';
 import { useRouter } from 'next/navigation';
@@ -31,6 +31,7 @@ const navItems: NavItem[] = [
   { label: 'Accessories', href: '/admin/dashboard/accessories', icon: ShoppingBag },
   { label: 'Spare Parts', href: '/admin/dashboard/spare-parts', icon: Wrench },
   { label: 'Dealer Enquiries', href: '/admin/dashboard/dealer-enquiries', icon: Briefcase },
+  { label: 'Contact Submissions', href: '/admin/dashboard/contact', icon: Mail },
   {
     label: 'Careers', icon: Users,
     children: [
@@ -41,7 +42,7 @@ const navItems: NavItem[] = [
   { label: 'Store Locator', href: '/admin/dashboard/stores', icon: MapPin },
   { label: 'SEO', href: '/admin/dashboard/seo', icon: Search },
   // { label: 'Media', href: '/admin/dashboard/media', icon: Image },
-  { label: 'Site Settings', href: '/admin/dashboard/settings', icon: Settings },
+  // { label: 'Site Settings', href: '/admin/dashboard/settings', icon: Settings },
 ];
 
 interface Props {

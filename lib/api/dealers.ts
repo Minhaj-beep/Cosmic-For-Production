@@ -30,3 +30,13 @@ export async function deleteDealer(id: string) {
   const { error } = await supabase.from('dealers').delete().eq('id', id);
   return { error };
 }
+
+export async function getPublicDealers() {
+  const { data, error } = await supabase
+    .from('dealers')
+    .select('*')
+    .eq('status', 'active')
+    .order('state', { ascending: true })
+    .order('name', { ascending: true });
+  return { data: (data ?? []) as Dealer[], error };
+}

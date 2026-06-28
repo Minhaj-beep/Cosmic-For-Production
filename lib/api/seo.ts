@@ -38,3 +38,12 @@ export async function upsertSeoByRoute(route: string, updates: Partial<SeoEntry>
     .single();
   return { data, error };
 }
+
+export async function getSeoByRoute(route: string) {
+  const { data } = await supabase
+    .from('seo_metadata')
+    .select('*')
+    .eq('route', route)
+    .maybeSingle();
+  return data as SeoEntry | null;
+}

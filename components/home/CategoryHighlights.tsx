@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { categories } from '@/lib/mock-data';
+import { getPublicCategories, type Category } from '@/lib/api/categories';
 
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -18,12 +18,18 @@ function useInView(threshold = 0.15) {
 }
 
 export default function CategoryHighlights() {
+  const [categories, setCategories] = useState<Category[]>([]);
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    getPublicCategories().then(({ data }) => setCategories(data));
+  }, []);
+
+  if (categories.length === 0) return null;
 
   return (
     <section className="py-20 md:py-32 bg-white overflow-hidden">
       <div className="max-w-screen-xl mx-auto px-5 lg:px-10">
-        {/* Header */}
         <div className="flex items-end justify-between mb-12 md:mb-16">
           <div ref={ref}>
             <p className={`section-label mb-3 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -42,7 +48,6 @@ export default function CategoryHighlights() {
           </Link>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {categories.map((cat, i) => (
             <Link
@@ -54,27 +59,23 @@ export default function CategoryHighlights() {
               style={{ transitionDelay: inView ? `${i * 60}ms` : '0ms' }}
             >
               <div className={`relative overflow-hidden ${i === 0 ? 'h-full min-h-[360px] md:min-h-[480px]' : 'aspect-[4/3]'}`}>
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
-                  style={{ objectPosition: 'center 30%' }}
-                />
-                {/* Gradient */}
+                {cat.image_url && (
+                  <img
+                    src={cat.image_url}
+                    alt={cat.name}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.06]"
+                    style={{ objectPosition: 'center 30%' }}
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-                {/* Hover veil */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-700" />
 
-                {/* Content */}
                 <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
                   <div className="transform transition-transform duration-500 group-hover:-translate-y-1">
-                    <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white/50 mb-1">
-                      {cat.count} Models
-                    </p>
                     <h3 className={`font-display font-semibold text-white leading-tight ${i === 0 ? 'text-2xl md:text-3xl' : 'text-lg md:text-xl'}`}>
                       {cat.name}
                     </h3>
-                    {i === 0 && (
+                    {i === 0 && cat.description && (
                       <p className="text-xs text-white/60 mt-1.5 leading-relaxed max-w-[180px] hidden md:block">
                         {cat.description}
                       </p>
@@ -90,7 +91,6 @@ export default function CategoryHighlights() {
           ))}
         </div>
 
-        {/* Mobile CTA */}
         <div className="mt-8 flex justify-center md:hidden">
           <Link href="/collections" className="cosmic-btn-outline-dark">
             All Collections
