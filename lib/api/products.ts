@@ -155,6 +155,8 @@ export async function getNewArrivals(limit = 3) {
     .eq('new_arrival', true)
     .order('created_at', { ascending: false })
     .limit(limit);
+
+    console.log(data);
   return { data: (data ?? []) as PublicProduct[], error };
 }
 

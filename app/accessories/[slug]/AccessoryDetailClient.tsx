@@ -82,9 +82,9 @@ export default function AccessoryDetailClient() {
             </div>
 
             <div className="flex gap-3">
-              <button className="flex-1 cosmic-btn-primary justify-center">
-                Request Quote <ArrowRight className="w-4 h-4" />
-              </button>
+               <Link href="/store-locator" className="flex-1 cosmic-btn-primary justify-center py-4">
+                Find Dealer <ArrowRight className="w-4 h-4" />
+              </Link>
               <Link href="/contact" className="flex-1 cosmic-btn-outline-dark justify-center">
                 Contact Us
               </Link>

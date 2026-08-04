@@ -90,11 +90,17 @@ export default function SparePartDetailClient() {
             </div>
 
             <div className="flex gap-3">
-              <button className="flex-1 cosmic-btn-primary justify-center">
+              {/* <button className="flex-1 cosmic-btn-primary justify-center">
                 Request Part <ArrowRight className="w-4 h-4" />
               </button>
               <Link href="/dealer-enquiry" className="flex-1 cosmic-btn-outline-dark justify-center">
                 Dealer Enquiry
+              </Link> */}
+              <Link href="/store-locator" className="flex-1 cosmic-btn-primary justify-center py-4">
+                Find Dealer <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="/contact" className="flex-1 cosmic-btn-outline-dark justify-center">
+                Contact Us
               </Link>
             </div>
 

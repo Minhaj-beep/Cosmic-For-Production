@@ -99,10 +99,17 @@ export default function ContactClient() {
               </div>
 
               {/* Map placeholder */}
-              <div className="aspect-[4/3] bg-zinc-50 border border-zinc-100 flex flex-col items-center justify-center gap-2">
-                <MapPin className="w-8 h-8 text-zinc-200" />
-                <p className="text-sm text-zinc-400">BKC, Mumbai</p>
-                <p className="text-xs text-zinc-300">Map placeholder</p>
+              <div className="aspect-[4/3] overflow-hidden border border-zinc-100">
+                <iframe
+                  title="Cosmic Bikes Headquarters"
+                  src="https://www.google.com/maps?q=22,+Bandra-Kurla+Complex,+Mumbai,+Maharashtra+400051&output=embed"
+                  width="100%"
+                  height="100%"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full border-0"
+                />
               </div>
             </div>
 

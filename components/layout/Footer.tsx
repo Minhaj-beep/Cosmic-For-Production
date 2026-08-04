@@ -1,24 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Instagram, Facebook, Youtube, Twitter, Mail, Phone, MapPin, ArrowRight, Check } from 'lucide-react';
+import { getPublicCategories, type Category } from '@/lib/api/categories';
 
 const footerLinks = {
-  Collections: [
-    { label: 'Road Bikes', href: '/collections/road' },
-    { label: 'Mountain Bikes', href: '/collections/mountain' },
-    { label: 'Gravel Bikes', href: '/collections/gravel' },
-    { label: 'Urban & City', href: '/collections/urban' },
-    { label: 'Electric Bikes', href: '/collections/electric' },
-    { label: "Kids' Bikes", href: '/collections/kids' },
-  ],
-  Gear: [
+  Others: [
     { label: 'Accessories', href: '/accessories' },
     { label: 'Spare Parts', href: '/spare-parts' },
-    { label: 'Helmets', href: '/accessories' },
-    { label: 'Bags & Packs', href: '/accessories' },
-    { label: 'Apparel', href: '/accessories' },
+    // { label: 'Helmets', href: '/accessories' },
+    // { label: 'Bags & Packs', href: '/accessories' },
+    // { label: 'Apparel', href: '/accessories' },
   ],
   Support: [
     { label: 'Warranty & Support', href: '/warranty' },
@@ -38,6 +31,7 @@ const footerLinks = {
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,10 +39,14 @@ export default function Footer() {
     setSubscribed(true);
   };
 
+  useEffect(() => {
+    getPublicCategories().then(({ data }) => setCategories(data));
+  }, []);
+
   return (
     <footer className="bg-zinc-950 text-zinc-400">
       {/* Newsletter */}
-      <div className="border-b border-zinc-800/60">
+      {/* <div className="border-b border-zinc-800/60">
         <div className="max-w-screen-xl mx-auto px-5 lg:px-10 py-12 md:py-14">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div className="max-w-sm">
@@ -87,7 +85,7 @@ export default function Footer() {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main links */}
       <div className="max-w-screen-xl mx-auto px-5 lg:px-10 py-14 md:py-16">
@@ -120,10 +118,42 @@ export default function Footer() {
             </div>
           </div>
 
+          <div>
+            <h4 className="text-[10px] font-semibold tracking-[0.25em] uppercase text-white mb-5">
+              Collections
+            </h4>
+
+            <ul className="space-y-2.5">
+              {categories.slice(0, 5).map((category) => (
+                <li key={category.id}>
+                  <Link
+                    href={`/collections/${category.slug}`}
+                    className="text-[13px] text-zinc-500 hover:text-zinc-200 transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+
+              <li>
+                <Link
+                  href="/collections"
+                  className="inline-flex items-center gap-1 text-[13px] font-medium text-white hover:text-[#D61C1C] transition-colors"
+                >
+                  View All Collections
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Link columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="text-[10px] font-semibold tracking-[0.25em] uppercase text-white mb-5">{category}</h4>
+              <h4 className="text-[10px] font-semibold tracking-[0.25em] uppercase text-white mb-5">
+                {category}
+              </h4>
+
               <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link.label}>

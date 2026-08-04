@@ -206,11 +206,14 @@ function ProductDetail({ product, related }: { product: FullProduct; related: Pu
               )}
 
               <div className="flex gap-3 mb-4">
-                <button onClick={handleInquiry} className="flex-1 cosmic-btn-primary justify-center py-4">
+                {/* <button onClick={handleInquiry} className="flex-1 cosmic-btn-primary justify-center py-4">
                   {inquirySent ? (<><Check className="w-4 h-4" /> Enquiry Sent!</>) : (<>Send Enquiry <ArrowRight className="w-4 h-4" /></>)}
-                </button>
-                <Link href="/store-locator" className="px-5 py-4 border border-zinc-200 text-zinc-700 hover:border-zinc-900 hover:text-zinc-900 transition-all duration-300 text-[11px] font-semibold tracking-[0.15em] uppercase">
+                </button> */}
+                <Link href="/store-locator" className="flex-1 cosmic-btn-primary justify-center py-4">
                   Find Dealer
+                </Link>
+                <Link href="/contact" className="px-5 py-4 border border-zinc-200 text-zinc-700 hover:border-zinc-900 hover:text-zinc-900 transition-all duration-300 text-[11px] font-semibold tracking-[0.15em] uppercase">
+                  Contact us
                 </Link>
               </div>
 
