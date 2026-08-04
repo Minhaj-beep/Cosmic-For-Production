@@ -102,7 +102,7 @@ export default function ContactClient() {
               <div className="aspect-[4/3] overflow-hidden border border-zinc-100">
                 <iframe
                   title="Cosmic Bikes Headquarters"
-                  src="https://www.google.com/maps?q=22,+Bandra-Kurla+Complex,+Mumbai,+Maharashtra+400051&output=embed"
+                  src="https://www.google.com/maps?q=Dheeraj%20Leelaa,%20School%20Road,%20Aynambakkam,%20Chennai%20600095&output=embed"
                   width="100%"
                   height="100%"
                   loading="lazy"
