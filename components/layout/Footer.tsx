@@ -197,7 +197,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Cosmic Bikes Pvt. Ltd. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
-            {['Privacy Policy', 'Terms of Use', 'Warranty'].map((item) => (
+            {['Warranty'].map((item) => (
               <Link
                 key={item}
                 href={item === 'Warranty' ? '/warranty' : '#'}
