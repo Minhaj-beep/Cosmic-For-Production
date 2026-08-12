@@ -55,39 +55,56 @@ export default function ContactClient() {
             {/* Info column */}
             <div className="lg:col-span-2 space-y-8">
               <div>
-                <h3 className="font-display text-xl font-semibold text-zinc-900 mb-5">Our Offices</h3>
+                <h3 className="font-display text-xl font-semibold text-zinc-900 mb-5">
+                  Our Office
+                </h3>
+
                 <div className="space-y-5">
                   {[
                     {
-                      title: 'Headquarters — Mumbai',
-                      address: '22, Bandra-Kurla Complex, Mumbai, Maharashtra 400051',
-                      phone: '+91 22 6789 1234',
-                      email: 'hello@cosmicbikes.com',
+                      title: 'Headquarters — Chennai',
+                      address: 'Dheeraj Leelaa, School Road, Aynambakkam, Chennai - 600095',
+                      // phone: '+91 22 6789 1234',
+                      email: 'support@cosmicbicycles.com',
                       hours: 'Mon–Fri, 9am–6pm IST',
                     },
-                    {
-                      title: 'Design Studio — Pune',
-                      address: '14, Koregaon Park, Pune, Maharashtra 411001',
-                      phone: '+91 20 2567 8901',
-                      email: 'design@cosmicbikes.com',
-                      hours: 'Mon–Fri, 10am–6pm IST',
-                    },
                   ].map((office) => (
-                    <div key={office.title} className="border border-zinc-100 p-5 hover:border-zinc-200 transition-colors">
-                      <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3">{office.title}</p>
+                    <div
+                      key={office.title}
+                      className="border border-zinc-100 p-5 hover:border-zinc-200 transition-colors"
+                    >
+                      <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3">
+                        {office.title}
+                      </p>
+
                       <div className="space-y-2.5">
                         <div className="flex items-start gap-2.5">
                           <MapPin className="w-3.5 h-3.5 text-zinc-400 mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-zinc-600 leading-relaxed">{office.address}</p>
+                          <p className="text-sm text-zinc-600 leading-relaxed">
+                            {office.address}
+                          </p>
                         </div>
-                        <div className="flex items-center gap-2.5">
+
+                        {/* <div className="flex items-center gap-2.5">
                           <Phone className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
-                          <a href={`tel:${office.phone.replace(/\s/g, '')}`} className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors">{office.phone}</a>
-                        </div>
+                          <a
+                            href={`tel:${office.phone.replace(/\s/g, '')}`}
+                            className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
+                          >
+                            {office.phone}
+                          </a>
+                        </div> */}
+
                         <div className="flex items-center gap-2.5">
                           <Mail className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
-                          <a href={`mailto:${office.email}`} className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors">{office.email}</a>
+                          <a
+                            href={`mailto:${office.email}`}
+                            className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
+                          >
+                            {office.email}
+                          </a>
                         </div>
+
                         <div className="flex items-center gap-2.5">
                           <Clock className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
                           <p className="text-sm text-zinc-500">{office.hours}</p>
@@ -98,10 +115,10 @@ export default function ContactClient() {
                 </div>
               </div>
 
-              {/* Map placeholder */}
+              {/* Map */}
               <div className="aspect-[4/3] overflow-hidden border border-zinc-100">
                 <iframe
-                  title="Cosmic Bikes Headquarters"
+                  title="Cosmic Bikes Headquarters — Chennai"
                   src="https://www.google.com/maps?q=Dheeraj%20Leelaa,%20School%20Road,%20Aynambakkam,%20Chennai%20600095&output=embed"
                   width="100%"
                   height="100%"
